@@ -9,8 +9,10 @@
 #define CPUSCHEDULER_H
 
 //#include <studio.h>
-#include <io.stream>
+#include <iostream>
 #include <string>
+#include <cstring>
+#include <fstream>
 
 using namespace std;
 
