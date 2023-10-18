@@ -7,80 +7,78 @@
 
 #include "CPUScheduler.h"
 
+// Enumeration for Scheduling Types
+enum SchedulingType {
+    FCFS_TYPE,
+    SJF_TYPE,
+    RR_TYPE,
+    PRIORITY_TYPE
+};
 
-int main (int argc, char** argv){
+int main(int argc, char** argv) {
 
-//we can delete these, but I find them helpful for testing
-cout << argc << endl;
+    // Command-line argument defaults
+    SchedulingType scheduling = FCFS_TYPE;
+    bool preemptive = false;
+    bool verbose = false;
+    string fileName = "sched.in";
+    int quanta = 10;
 
-for (int i=0; i < argc; i++){
-			cout << argv[i] << endl;
-		
-		}
-	
-cout << endl;
+    // Loop through arguments and set flags
+    for (int i = 1; i < argc; i++) {
+        string arg = argv[i];
+        if (arg == "--type") {
+            if (i + 1 < argc) { 
+                i++;
+                string typeArg = argv[i];
+                if (typeArg == "SJF") {
+                    scheduling = SJF_TYPE;
+                } else if (typeArg == "RR") {
+                    scheduling = RR_TYPE;
+                } else if (typeArg == "Priority") {
+                    scheduling = PRIORITY_TYPE;
+                } else {
+                    scheduling = FCFS_TYPE; 
+                }
+            }
+        } else if (arg == "--preemptive") {
+            preemptive = true;
+        } else if (arg == "--file" && i + 1 < argc) {
+            fileName = argv[++i]; 
+        } else if (arg == "--quanta" && i + 1 < argc) {
+            quanta = stoi(argv[++i]); // Referemce (1). 
+        } else if (arg == "--verbose") {
+            verbose = true;
+        }
+    }
 
-ifstream inFile;
+    // Opening the file 
+    ifstream inFile;
+    inFile.open(fileName);
+    if (!inFile.is_open()) {
+        cout << "Error: " << fileName << " could not be opened" << endl;
+    } else {
+        cout << "File successfully opened!" << endl;
+    }
 
-bool FCFS, SJF, Priority, RR;
+    switch (scheduling) {
+        case SJF_TYPE:
+            // SJF stuff
+            break;
+        case RR_TYPE:
+            // RR stuff
+            break;
+        case PRIORITY_TYPE:
+            // Priority stuff
+            break;
+        default:  // Now defaults to FCFS
+            FCFS fcfsScheduler;
+            fcfsScheduler.loadProcessesFromFile(fileName);
+            fcfsScheduler.execute(verbose);
+            break;
+    }
 
-bool preemtive;
-
-FCFS = true;
-
-preemtive = false;
-
-if(argc == 1){
-	cout << "No arguments were passed" << endl;
-	}
-
-//I would love if we could figure out how to not have to make these strings
-string stringSJF = "--typeSJF";
-string stringRR = "--typeRR";
-string stringPriority = "--typePriority";
-string stringPreemptive = "--preemptive";
-for (int i=0; i < argc; i++){
-	//tests for type
-		if(argv[i] == stringSJF)
-{
-	FCFS = false;
-	SJF = true;
-	cout << "type is: --typeSJF" << endl;
-
-}
-	else if(argv[i] == stringRR)
-{
-	FCFS = false;
-	RR = true;
-	cout << "type is: --typeRR" << endl;
-
-}
-	else if(argv[i] == stringPriority)
-{
-	FCFS = false;
-	Priority = true;
-	cout << "type is: --typePriority" << endl;
-
-}
-
-//tests for preemptive
-	if(argv[i] == stringPreemptive){
-		preemtive = false;
-		cout << "preemtive" << endl;
-	}
-}
-
-	
-
-//change file name to variable
-inFile.open ("sched.in");
-
-//we can take some/all of this out, but I find it helpful for testing purposes
-if (!inFile.is_open()) {
-	cout << "Error: sched.in could not be opened" << endl;
-}
-else {
-	cout << "File sucessfully opened!" << endl;
+    return 0;
 }
 
-}
+// Reference 1: https://cplusplus.com/reference/string/stoi/

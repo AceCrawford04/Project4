@@ -13,6 +13,7 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include "FCFS.h"
 
 using namespace std;
 
