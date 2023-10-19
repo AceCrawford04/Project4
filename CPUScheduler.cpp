@@ -61,11 +61,17 @@ int main(int argc, char** argv) {
         cout << "File successfully opened!" << endl;
     }
 
+    SJF sjfScheduler;
+    int processCount;
+
     switch (scheduling) {
         case SJF_TYPE:
-            // SJF stuff
-            break;
+            processCount = sjfScheduler.loadProcessesFromFile(fileName);
+           sjfScheduler.execute(verbose, processCount);
+           break;
         case RR_TYPE:
+           // RR rrScheduler;
+           // RR rrScheduler
             // RR stuff
             break;
         case PRIORITY_TYPE:
