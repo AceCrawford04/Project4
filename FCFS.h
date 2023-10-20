@@ -3,8 +3,7 @@
 #ifndef FCFS_H
 #define FCFS_H
 
-#include "procManagement.h"
-#include <vector>
+#include "procManagement.h" 
 
 class FCFS {
 public:
@@ -15,8 +14,7 @@ public:
 private:
     queue<Process> readyQueue;  // Queue of ready processes
     double averageWaitTime = 0;  // To calculate average wait time
-
-    // other methods can go here
+    int numberOfProcesses = 0; // Init number of processes
 };
 
 #endif // FCFS_H
