@@ -9,9 +9,11 @@
 class SJF {
 public:
     SJF();  // Constructor
-    int loadProcessesFromFile(const string& fileName);  // Load processes from a file
-    void execute(bool verbose = false, int processCount = 0);  // Executes the SJF scheduling
-    void putQueue(const string& fileName, int count);
+    int loadProcessesFromFile(const string& fileName, bool preemtion);  // Load processes from a file
+    void execute(bool verbose = false, int processCount = 0, bool preemtion = false);  // Executes the SJF scheduling
+    void executePremtion(bool verbose = false, int processCount = 0, bool preemtion = false);  // Executes the SJF scheduling
+    void putQueue(const string& fileName, int count, bool preemtion);
+
    // void sortQueue(int&, int count);
 private:
 
@@ -22,3 +24,4 @@ private:
 #endif // SJF_H
 
 //./project4 --type SJF --verbose
+
