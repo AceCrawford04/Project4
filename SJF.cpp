@@ -1,4 +1,12 @@
-// implementation file for SJF. 
+//File: SJF.cpp
+//Ace Crawford, Cameron Herine, and Theresa Redford 
+//Fall 2023, Transy
+//Operating Systems
+//This is the implementation file for SJF
+//It does not work with over 1,000 processes, becuase when we tried to dynamically create the array it led to memeory errors
+
+#include <iostream>
+
 
 #include "SJF.h"
 #include <iostream>
@@ -7,10 +15,10 @@
 using namespace std; 
 
 SJF::SJF() {
-    // Any initialization for FCFS can go here
+    // Any initialization for SJF can go here
 }
 
-int SJF::loadProcessesFromFile(const string& fileName) {
+int SJF::loadProcessesFromFile(const string& fileName, bool preemtion) {
     ifstream inFile(fileName);
     int processCount = 0;
     //string processes[processCount][3];
@@ -33,7 +41,7 @@ int SJF::loadProcessesFromFile(const string& fileName) {
          cout << "first loop" << processCount << endl; //https://press.rebus.community/programmingfundamentals/chapter/loading-an-array-from-a-text-file/
      }
      //int *ptr;
-     putQueue(fileName, processCount);
+    
     // sortQueue(ptr, processCount);
      //string processes[processCount][3];
 
@@ -49,7 +57,7 @@ int SJF::loadProcessesFromFile(const string& fileName) {
     // }
 
         
-
+     putQueue(fileName, processCount, preemtion);
         
        // processCount++;
         cout << id << " " << arrival << " " << burst << " " << priority << endl;
@@ -61,9 +69,10 @@ int SJF::loadProcessesFromFile(const string& fileName) {
     return processCount;
 }
 
-void SJF::putQueue(const string& fileName, int processCount) {
+
+void SJF::putQueue(const string& fileName, int processCount, bool preemtion) {
     ifstream inFile(fileName);
-  string processes[processCount][3];
+  string processes[10000][3];
  int savecount = processCount;
   int savecount2 = savecount;
   int savecount3 = savecount2;
@@ -125,3 +134,71 @@ cout << savecount2 << endl;
        // cout << endl;
        // }
     }
+
+
+
+
+void SJF::executePremtion(bool verbose, int processCount, bool preemtion) {
+cout << "execute" << endl;
+    //cout << "this is" << verbose << endl;
+    int currentTime = 0;  // Keep track of current time
+    double totalWaitTime = 0;  // Accumulator for total waiting time
+
+    while (!readyQueue.empty()) {
+        Process current = readyQueue.front();
+
+       // if 
+
+
+        readyQueue.pop();
+        cout << "off queue ID: " << current.ID << " Arrival time: " << current.Arrival_Time << " burst: "<< current.Total_CPU_Burst << " priority: "<< current.Priority << endl;
+
+         //if()
+         //Calculate wait time for this process
+        int waitTime = currentTime - current.Arrival_Time;
+        totalWaitTime += waitTime;
+
+        // Verbose output
+        if (verbose) {
+            cout << "Time " << currentTime << ": Processing " << current.ID << endl;
+        }
+
+        // Simulate processing...
+        currentTime += current.Total_CPU_Burst;  // Add burst time to current time
+    }
+cout << "total wait time: " << totalWaitTime << endl;
+cout << "current time: " << currentTime << endl;
+cout << "number of processes: " << processCount << endl;
+    averageWaitTime = currentTime / processCount;
+    cout << "Average Wait Time: " << averageWaitTime << endl;
+}
+
+void SJF::execute(bool verbose, int processCount, bool preemtion) {
+    cout << "execute" << endl;
+    //cout << "this is" << verbose << endl;
+    int currentTime = 0;  // Keep track of current time
+    double totalWaitTime = 0;  // Accumulator for total waiting time
+
+    while (!readyQueue.empty()) {
+        Process current = readyQueue.front();
+        readyQueue.pop();
+        cout << "off queue ID: " << current.ID << " Arrival time: " << current.Arrival_Time << " burst: "<< current.Total_CPU_Burst << " priority: "<< current.Priority << endl;
+
+         //Calculate wait time for this process
+        int waitTime = currentTime - current.Arrival_Time;
+        totalWaitTime += waitTime;
+
+        // Verbose output
+        if (verbose) {
+            cout << "Time " << currentTime << ": Processing " << current.ID << endl;
+        }
+
+        // Simulate processing...
+        currentTime += current.Total_CPU_Burst;  // Add burst time to current time
+    }
+cout << "total wait time: " << totalWaitTime << endl;
+cout << "current time: " << currentTime << endl;
+cout << "number of processes: " << processCount << endl;
+    averageWaitTime = currentTime / processCount;
+    cout << "Average Wait Time: " << averageWaitTime << endl;
+}
