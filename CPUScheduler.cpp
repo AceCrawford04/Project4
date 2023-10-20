@@ -4,9 +4,19 @@
 //Operating Systems
 //This is the driver file for our CPU scheduler, (continue description)
 //(what works, what does not)
+#include <iostream>
+#include <string>
+#include <cstring>
+//#include <studio.h>
+#include <cstring>
+#include <fstream>
+#include "FCFS.h"
+#include "SJF.h"
+#include "Priority.h"
+#include "RoundRobin.h"
 
-#include "CPUScheduler.h"
-
+//#include "CPUScheduler.h"
+using namespace std;
 // Enumeration for Scheduling Types
 enum SchedulingType {
     FCFS_TYPE,
@@ -24,7 +34,9 @@ int main(int argc, char** argv) {
     string fileName = "sched.in";
     int quanta = 10;
 
-    // Loop through arguments and set flags
+    // Loop through arguments and 
+
+    //set flags
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         if (arg == "--type") {
@@ -41,16 +53,25 @@ int main(int argc, char** argv) {
                     scheduling = FCFS_TYPE; 
                 }
             }
+            //cout << argv[i] << endl;
         } else if (arg == "--preemptive") {
             preemptive = true;
         } else if (arg == "--file" && i + 1 < argc) {
             fileName = argv[++i]; 
         } else if (arg == "--quanta" && i + 1 < argc) {
-            quanta = stoi(argv[++i]); // Referemce (1). 
+            quanta = stoi(argv[++i]); // Reference (1). 
         } else if (arg == "--verbose") {
             verbose = true;
         }
     }
+
+
+    cout << scheduling << endl; //out
+    cout << preemptive << endl;
+    cout << fileName << endl;
+    cout << quanta  << endl;
+    cout << verbose << endl;
+    cout << "check" << endl;
 
     // Opening the file 
     ifstream inFile;
@@ -60,14 +81,22 @@ int main(int argc, char** argv) {
     } else {
         cout << "File successfully opened!" << endl;
     }
-
+   // cout << "here" << endl;
+    //when I had this under case:SJF_type the program would not compile, so I put it here and it worked
     SJF sjfScheduler;
+    //RoundRobin rrScheduler;
+    Priority priorityScheduler;
     int processCount;
-
+    //cout << "here" << endl;
+//cout << scheduling;
     switch (scheduling) {
         case SJF_TYPE:
-            processCount = sjfScheduler.loadProcessesFromFile(fileName);
-           sjfScheduler.execute(verbose, processCount);
+       // cout << "12" << endl;
+            processCount = sjfScheduler.loadProcessesFromFile(fileName, preemptive);
+            if (verbose == false)
+           sjfScheduler.execute(verbose, processCount, preemptive);
+            else
+           sjfScheduler.execute(verbose, processCount, preemptive);
            break;
         case RR_TYPE:
            // RR rrScheduler;
@@ -75,16 +104,19 @@ int main(int argc, char** argv) {
             // RR stuff
             break;
         case PRIORITY_TYPE:
-            // Priority stuff
+            processCount = priorityScheduler.loadProcessesFromFile(fileName, preemptive);
+             if (verbose == false)
+           priorityScheduler.execute(verbose, processCount, preemptive);
+            else
+           priorityScheduler.execute(verbose, processCount, preemptive);
             break;
         default:  // Now defaults to FCFS
             FCFS fcfsScheduler;
             fcfsScheduler.loadProcessesFromFile(fileName);
             fcfsScheduler.execute(verbose);
+
             break;
     }
 
     return 0;
 }
-
-// Reference 1: https://cplusplus.com/reference/string/stoi/
