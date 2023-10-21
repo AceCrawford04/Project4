@@ -16,13 +16,12 @@ using namespace std;
 
 RR::RR() {}
 
- 	struct Process {
+ struct Process {
     string id;
     int priority;
     int burstTime; 
     int waitTime;      
 };
-    
 
 int RR::loadProcessesFromFile(const string& fileName) {
     ifstream inFile(fileName);
@@ -35,9 +34,7 @@ int RR::loadProcessesFromFile(const string& fileName) {
     
     int arrival, burst;
 
-
 while (!runQueue.empty()) {
-
 	int currentTime = 0;    
  	int quanta =10;
  	inr queueCount;
@@ -48,7 +45,7 @@ while (!runQueue.empty()) {
        // adds a process to the run queue 
         if(currentProcess.burstTime <= quanta){
 
-        	currentTime += currentProcess.burstTime;
+            currentTime += currentProcess.burstTime;
             currentProcess.burstTime = 0;
             currentProcess.waitTime += burstTime - currentProcess.burstTime;
             queueCount ++;
@@ -62,12 +59,11 @@ while (!runQueue.empty()) {
             currentProcess.waitTime += currentTime;
             runQueue.push(currentProcess);
             cout << "ID: " << currentProcess.id << " The Quantum has exited" << endl;
-        }
-    
+        }  
 
     void RoundRobin :: print(void){
 
-	while (queueCount != readyQueue) {
+    while (queueCount != readyQueue) {
     const Process& process = *queueCount;
     cout << "Process name: " << process.name << endl;
     cout << "The average Wait Time is " << currentProcess / queueCount << endl;
