@@ -4,129 +4,74 @@
 //Operating Systems
 //Implementation for RoundRobin
 
-// refereences: 
-
-// For idea with regards to how to approach working with priority within round robin.
-//https://stackoverflow.com/questions/54858509/what-part-does-priority-play-in-round-robin-scheduling
-
+//referneces:
 // for how to use queue library: https://www.geeksforgeeks.org/queue-cpp-stl/
 
-// for push and pop: UStack example from DR England ex 11. 
-
-
+#include "RoundRobin.h"
 #include <iostream>
-// reading from file
 #include <fstream>
 #include <queue>
-#include "RoundRobin.h"
 
-using namespace std;
+using namespace std; 
 
-RoundRobin::RoundRobin() {
-    // Any initialization for RR can go here
-}
+RR::RR() {}
 
-struct Process {
-    string name =" ";
-   int priority=0;
-   int remainingTime=0;
-   int waitTime=0;      
+ 	struct Process {
+    string id;
+    int priority;
+    int burstTime; 
+    int waitTime;      
 };
-
-// function for retrieving from the file
-int RoundRobin::loadProcessesFromFile(const string& fileName) {
-    ifstream inFile(fileName);
-     int processCount=0;
     
 
+int RR::loadProcessesFromFile(const string& fileName) {
+    ifstream inFile(fileName);
+    int processCount = 0;
 
     if (!inFile.is_open()) {
         cout << "Error: Could not open file " << fileName << endl;
         return 0;
     }
-    string id;
-    int arrival, burst, priority;
-    //while (inFile >> id >> arrival >> burst >> priority) {
-    //With the original while loop, it never actaully executed the code in the body during my testing, however it does print put 4 random numbers before that i cannot track down.
-    while (inFile) {
-        cout << id << " " << arrival << " " << burst << " " << priority << endl;
-        Process newProcess(id, arrival, burst, priority);
-        readyQueue.push(newProcess);
-        cout << id << " " << arrival << endl;
-         inFile >> id >> arrival >> burst >> priority;
-         processCount++;
-    }
-    return processCount;
-}
-
-
-// this function compares the prioritites of each process.
-//if priority >= 50, then we will put it in a high priority queue.
-// if priority is < 50, we will put it in a low priority queue.
-// later we will use this to add high priority queue processes to the 
-// run queue first. 
-//  takes the categorized processes and add them to the run queue
-// first pushes the high priority to the queue using .push, then the low priority.
-void RoundRobin :: determinePriorityProcesses(const Process>& processes, Process>& runQueue, int timeQuantum) {
-
-    priority_queue<Process, Process, ComparePriority> highPriorityQueue;
-    priority_queue<Process, Process, ComparePriority> lowPriorityQueue;
-
-    int time = 0;
-      int timeQuantum = 10; 
-      int queueCount =0;
-
     
-while (queueCount != processes) {
-    const Process& process = *queueCount;
-    if (process.priority >= 50) {
-        highPriorityQueue.push(process);
-    } else {
-        lowPriorityQueue.push(process);
-    }
-    ++queueCount; // Move to the next element
-}
+    int arrival, burst;
 
-    while (!runQueue== 0) {
-        Process currentProcess = runQueue;
+
+while (!runQueue.empty()) {
+
+	int currentTime = 0;    
+ 	int quanta =10;
+ 	inr queueCount;
+
+        Process currentProcess = runQueue.push();
         runQueue.pop();
 
- // check if the process completes withing the time quanta, if the remainingTime = 0, then the process has finsihed. 
+       // adds a process to the run queue 
+        if(currentProcess.burstTime <= quanta){
 
-        if (currentProcess.remainingTime <= timeQuantum) {
- 
-            currentTime = currentTime+ currentProcess.remainingTime;
-            currentProcess.remainingTime = 0;
-            currentProcess.waitTime = time + (time - currentProcess.remainingTime);
-        } 
-
-// when the quantum time expires, we have to add the process back to its ready queue
-        else {
-            
-            time = time + timeQuantum;
-            currentProcess.remainingTime = timeQuantum;
-            currentProcess.waitTime = time + time;
-            runQueue.push(currentProcess);
-
+        	currentTime += currentProcess.burstTime;
+            currentProcess.burstTime = 0;
+            currentProcess.waitTime += burstTime - currentProcess.burstTime;
+            queueCount ++;
         }
-    }
 
-    return 0;
-}
+        // removes a process from the queue if the quantum time expires
+        else {
+          
+            currentTime += quanta;
+            currentProcess.burstTime -= quanta;
+            currentProcess.waitTime += currentTime;
+            runQueue.push(currentProcess);
+            cout << "ID: " << currentProcess.id << " The Quantum has exited" << endl;
+        }
+    
 
+    void RoundRobin :: print(void){
 
-    queue<Process> runQueue;
-    determinePriorityProcesses(readyQueue, runQueue, timeQuantum);
-
- // print the processes and their wait times respectively
-
-   void RoundRobin :: print(void){
-
-while (queueCount != readyQueue) {
-    const Process& process = *it;
+	while (queueCount != readyQueue) {
+    const Process& process = *queueCount;
     cout << "Process name: " << process.name << endl;
-    cout << "The average Wait Time is " << (process.waitTime) / process.remainingTime << endl;
+    cout << "The average Wait Time is " << currentProcess / queueCount << endl;
     ++queueCount; 
 }
-
 }
+
